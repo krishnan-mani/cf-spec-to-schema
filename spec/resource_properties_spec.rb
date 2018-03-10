@@ -94,6 +94,7 @@ SCHEMA
 SPEC
       property_type = PropertyType.from_resource_specification('AWS::ElasticBeanstalk::ConfigurationTemplate.ConfigurationOptionSetting', resource_specification_json)
       expect(property_type.get_property("Namespace").primitive_type).to eql 'String'
+      expect(property_type.get_property("OptionName").primitive_type).to eql 'String'
     end
 
     it 'outputs primitive types with a reference to the primitive type definition' do
