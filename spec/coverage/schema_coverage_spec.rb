@@ -1,6 +1,11 @@
 require 'json'
+require 'pathname'
 
 require_relative '../../lib/spec_to_schema'
+
+def get_resource_type_from_ref(refmap)
+  Pathname.new(refmap.values.first.gsub('#', '')).basename.to_s
+end
 
 RSpec.describe "generated schema for resources" do
 
@@ -16,6 +21,10 @@ RSpec.describe "generated schema for resources" do
 
       spec_to_schema = SpecToSchema.new(resource_specification)
       schema = JSON.parse(spec_to_schema.get_schema)
+
+      resource_types_refs = schema['oneOf'].collect { |refmap| get_resource_type_from_ref(refmap) }.sort
+      expect(resource_types_refs).to eql resource_types_from_spec
+
       resource_types_from_schema = schema['definitions']['resource_types'].keys.sort
       expect(resource_types_from_schema).to eql resource_types_from_spec
 
